@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Ahorro en gastos frustrados</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_export">Export to CSV</string>
 
     <!-- Fragments Labels -->
-    <string name="first_fragment_label">Savings from NOT buying</string>
+    <string name="first_fragment_label">Savings from <b>NOT</b> buying</string>
     <string name="second_fragment_label">Second Fragment</string>
 
     <!-- Dashboard -->
