@@ -2,7 +2,6 @@ package com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,6 +9,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.ActivityMainBinding
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.DialogAddItemBinding
 
@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
     private fun showAddItemDialog() {
         val dialogBinding = DialogAddItemBinding.inflate(layoutInflater)
         
-        AlertDialog.Builder(this)
-            .setTitle("Nuevo Item")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Product")
             .setView(dialogBinding.root)
             .setPositiveButton("Agregar") { _, _ ->
                 val name = dialogBinding.etName.text.toString()
