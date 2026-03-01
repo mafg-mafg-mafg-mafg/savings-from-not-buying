@@ -84,7 +84,7 @@ class FirstFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun loadItems() {
+    fun loadItems() {
         viewLifecycleOwner.lifecycleScope.launch {
             val items = db.itemDao().getAll()
             adapter.updateItems(items)

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Ahorro en gastos frustrados</string>
     <string name="action_export">Exportar a CSV</string>
+    <string name="action_import">Importar desde CSV</string>
 
     <!-- Etiquetas de Fragmentos -->
     <string name="first_fragment_label">Ahorro por <b>NO</b> comprar</string>

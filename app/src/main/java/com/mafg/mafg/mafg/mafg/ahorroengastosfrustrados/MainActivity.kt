@@ -18,6 +18,8 @@ import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.DialogAddIte
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.Locale
 
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     private val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
         uri?.let { saveCsvToUri(it) }
+    }
+
+    private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let { importCsvFromUri(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +90,10 @@ class MainActivity : AppCompatActivity() {
                 exportDatabaseToCsv()
                 true
             }
+            R.id.action_import -> {
+                importDatabaseFromCsv()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -92,27 +102,26 @@ class MainActivity : AppCompatActivity() {
         createDocumentLauncher.launch("Savings from NOT buying.csv")
     }
 
+    private fun importDatabaseFromCsv() {
+        openDocumentLauncher.launch(arrayOf("text/comma-separated-values", "text/csv", "application/csv"))
+    }
+
     private fun saveCsvToUri(uri: Uri) {
         lifecycleScope.launch {
             try {
                 val db = AppDatabase.getDatabase(this@MainActivity)
                 val items = withContext(Dispatchers.IO) { db.itemDao().getAll() }
                 
-                // Calculate total savings: Sum of (amount * count) for all items
                 val totalSavings = items.sumOf { it.amount * it.count }
                 
                 withContext(Dispatchers.IO) {
                     contentResolver.openOutputStream(uri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
-                            // Header with Subtotal column
                             writer.write("ID,Name,Amount,Count,Subtotal\n")
-                            
                             items.forEach { item ->
                                 val subtotal = item.amount * item.count
                                 writer.write("${item.id},${item.name},${item.amount},${item.count},${String.format(Locale.US, "%.2f", subtotal)}\n")
                             }
-                            
-                            // Footer with total sum
                             writer.write("\n,,,,Total: ${String.format(Locale.US, "%.2f", totalSavings)}\n")
                         }
                     }
@@ -120,6 +129,51 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Export successful!", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "Export failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun importCsvFromUri(uri: Uri) {
+        lifecycleScope.launch {
+            try {
+                val items = mutableListOf<Item>()
+                withContext(Dispatchers.IO) {
+                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                        BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                            val header = reader.readLine() // Skip header
+                            var line: String? = reader.readLine()
+                            while (line != null && line.isNotBlank()) {
+                                if (line.startsWith(",")) break // Stop at total footer
+                                val parts = line.split(",")
+                                if (parts.size >= 4) {
+                                    val name = parts[1]
+                                    val amount = parts[2].toDoubleOrNull() ?: 0.0
+                                    val count = parts[3].toIntOrNull() ?: 1
+                                    items.add(Item(name = name, amount = amount, count = count))
+                                }
+                                line = reader.readLine()
+                            }
+                        }
+                    }
+                }
+
+                if (items.isNotEmpty()) {
+                    val db = AppDatabase.getDatabase(this@MainActivity)
+                    withContext(Dispatchers.IO) {
+                        db.itemDao().insertAll(items)
+                    }
+                    
+                    // Refresh fragment UI
+                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
+                    val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
+                    if (currentFragment is FirstFragment) {
+                        currentFragment.loadItems()
+                    }
+                    
+                    Toast.makeText(this@MainActivity, "Import successful!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Import failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
