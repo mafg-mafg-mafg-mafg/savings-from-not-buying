@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 
 class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemName)
+        val amountView: TextView = view.findViewById(R.id.itemAmount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,7 +21,9 @@ class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<I
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = items[position].name
+        val item = items[position]
+        holder.textView.text = item.name
+        holder.amountView.text = String.format(Locale.getDefault(), "+$%.2f", item.amount)
     }
 
     override fun getItemCount() = items.size

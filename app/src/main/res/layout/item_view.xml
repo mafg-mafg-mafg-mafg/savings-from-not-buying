@@ -12,16 +12,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/itemName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/itemAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/light_green"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
