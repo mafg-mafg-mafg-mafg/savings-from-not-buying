@@ -2,6 +2,8 @@
 
 **Do not buy this product** is a personal finance application designed to transform deprivation into motivation. Its primary goal is to help users visualize and quantify the money they save every time they consciously choose **not to make** an impulsive or unnecessary purchase.
 
+![App Screenshot](app_screenshot.png)
+
 ## Key Features
 
 1.  **Active Savings Logging:** Document every "frustrated expense" by assigning a product name and the cost avoided.
