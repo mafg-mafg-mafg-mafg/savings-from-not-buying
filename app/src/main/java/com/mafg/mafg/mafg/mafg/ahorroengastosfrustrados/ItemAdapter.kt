@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(android.R.id.text1)
+        val textView: TextView = view.findViewById(R.id.itemName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_view, parent, false)
         return ViewHolder(view)
     }
 
