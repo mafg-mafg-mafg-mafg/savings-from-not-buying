@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Ahorro en gastos frustrados</string>
+    <string name="app_name">Do not buy this product</string>
     <string name="action_export">Export to CSV</string>
     <string name="action_import">Import from CSV</string>
 
     <!-- Fragments Labels -->
-    <string name="first_fragment_label">Savings from <b>NOT</b> buying</string>
+    <string name="first_fragment_label">Do not buy this product</string>
     <string name="second_fragment_label">Second Fragment</string>
 
     <!-- Dashboard -->
