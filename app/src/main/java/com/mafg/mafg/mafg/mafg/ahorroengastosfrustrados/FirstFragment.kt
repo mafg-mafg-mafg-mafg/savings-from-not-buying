@@ -1,10 +1,19 @@
 package com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados
 
+import android.animation.ValueAnimator
+import android.content.Context
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +28,7 @@ class FirstFragment : Fragment() {
     
     private lateinit var adapter: ItemAdapter
     private val db by lazy { AppDatabase.getDatabase(requireContext()) }
+    private var lastTotal = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,8 +81,56 @@ class FirstFragment : Fragment() {
     }
 
     private fun updateTotalSavings(items: List<Item>) {
-        val total = items.sumOf { it.amount }
-        binding.totalSavingsText.text = String.format(Locale.getDefault(), "+$%.2f", total)
+        val newTotal = items.sumOf { it.amount }
+        
+        if (newTotal > lastTotal) {
+            triggerHapticFeedback()
+            playCashRegisterSound()
+            
+            binding.totalSavingsText.animate()
+                .scaleX(1.2f)
+                .scaleY(1.2f)
+                .setDuration(200)
+                .setInterpolator(OvershootInterpolator())
+                .withEndAction {
+                    binding.totalSavingsText.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }.start()
+        }
+
+        val animator = ValueAnimator.ofFloat(lastTotal.toFloat(), newTotal.toFloat())
+        animator.duration = 1000
+        animator.addUpdateListener { animation ->
+            val animatedValue = animation.animatedValue as Float
+            binding.totalSavingsText.text = String.format(Locale.getDefault(), "+$%.2f", animatedValue)
+        }
+        animator.start()
+        lastTotal = newTotal
+    }
+
+    private fun triggerHapticFeedback() {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = requireContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(50)
+        }
+    }
+
+    private fun playCashRegisterSound() {
+        try {
+            val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
+            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
+            // ToneGenerator es una solución rápida sin archivos externos.
+            // Para un sonido real de "caja registradora", se necesitaría un archivo .mp3 en res/raw.
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun addItem(name: String, amount: Double) {
