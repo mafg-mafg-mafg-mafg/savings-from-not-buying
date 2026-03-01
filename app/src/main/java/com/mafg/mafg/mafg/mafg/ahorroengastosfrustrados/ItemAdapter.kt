@@ -24,6 +24,10 @@ class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<I
 
     override fun getItemCount() = items.size
 
+    fun getItemAt(position: Int): Item {
+        return items[position]
+    }
+
     fun updateItems(newItems: List<Item>) {
         items.clear()
         items.addAll(newItems)
