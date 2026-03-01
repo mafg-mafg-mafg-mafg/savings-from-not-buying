@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Item(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val amount: Double = 0.0
+    val amount: Double = 0.0,
+    val count: Int = 1
 )

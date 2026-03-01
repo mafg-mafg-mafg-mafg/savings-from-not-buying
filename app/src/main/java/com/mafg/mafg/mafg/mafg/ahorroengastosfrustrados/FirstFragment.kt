@@ -41,11 +41,23 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        adapter = ItemAdapter(mutableListOf())
+        adapter = ItemAdapter(mutableListOf()) { item ->
+            onItemClicked(item)
+        }
         binding.recyclerView.adapter = adapter
 
         setupSwipeToDelete()
         loadItems()
+    }
+
+    private fun onItemClicked(item: Item) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val updatedItem = item.copy(count = item.count + 1)
+            db.itemDao().update(updatedItem)
+            loadItems()
+            triggerHapticFeedback()
+            playCashRegisterSound()
+        }
     }
 
     private fun setupSwipeToDelete() {
@@ -81,12 +93,12 @@ class FirstFragment : Fragment() {
     }
 
     private fun updateTotalSavings(items: List<Item>) {
-        val newTotal = items.sumOf { it.amount }
-        
+        val newTotal = items.sumOf { it.amount * it.count }
+        animateSavings(newTotal)
+    }
+
+    private fun animateSavings(newTotal: Double) {
         if (newTotal > lastTotal) {
-            triggerHapticFeedback()
-            playCashRegisterSound()
-            
             binding.totalSavingsText.animate()
                 .scaleX(1.2f)
                 .scaleY(1.2f)
@@ -126,8 +138,6 @@ class FirstFragment : Fragment() {
         try {
             val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
             toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
-            // ToneGenerator es una solución rápida sin archivos externos.
-            // Para un sonido real de "caja registradora", se necesitaría un archivo .mp3 en res/raw.
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -135,7 +145,7 @@ class FirstFragment : Fragment() {
 
     fun addItem(name: String, amount: Double) {
         viewLifecycleOwner.lifecycleScope.launch {
-            val newItem = Item(name = name, amount = amount)
+            val newItem = Item(name = name, amount = amount, count = 1)
             db.itemDao().insert(newItem)
             loadItems()
         }

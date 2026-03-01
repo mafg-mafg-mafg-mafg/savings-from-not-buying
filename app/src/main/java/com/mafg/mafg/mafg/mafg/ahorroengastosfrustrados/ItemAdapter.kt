@@ -7,7 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Locale
 
-class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(
+    private val items: MutableList<Item>,
+    private val onItemClick: (Item) -> Unit
+) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemName)
@@ -24,6 +27,10 @@ class ItemAdapter(private val items: MutableList<Item>) : RecyclerView.Adapter<I
         val item = items[position]
         holder.textView.text = item.name
         holder.amountView.text = String.format(Locale.getDefault(), "+$%.2f", item.amount)
+        
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
     override fun getItemCount() = items.size
