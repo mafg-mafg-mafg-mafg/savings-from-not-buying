@@ -1,8 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.AhorroEnGastosFrustrados" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Main theme colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface</item>
+
+        <!-- Force dialog background to white -->
+        <item name="materialAlertDialogTheme">@style/WhiteDialogTheme</item>
+        <item name="alertDialogTheme">@style/WhiteDialogThemeOld</item>
+    </style>
+
+    <!-- For MaterialAlertDialogBuilder -->
+    <style name="WhiteDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:background">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <item name="colorSurfaceContainer">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorSurfaceContainerHighest">@color/white</item>
+    </style>
+
+    <!-- For standard AlertDialog -->
+    <style name="WhiteDialogThemeOld" parent="Theme.Material3.DayNight.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="colorSurface">@color/white</item>
     </style>
 
     <style name="Theme.AhorroEnGastosFrustrados" parent="Base.Theme.AhorroEnGastosFrustrados" />

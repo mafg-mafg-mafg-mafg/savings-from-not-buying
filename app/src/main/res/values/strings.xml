@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Fragments Labels -->
-    <string name="first_fragment_label">Savings from not buying</string>
+    <string name="first_fragment_label">Savings from NOT buying</string>
     <string name="second_fragment_label">Second Fragment</string>
 
     <!-- Dashboard -->
@@ -14,9 +14,9 @@
     <string name="item_count_format">x%d</string>
 
     <!-- Add Item Dialog -->
-    <string name="dialog_add_product_title">Product</string>
+    <string name="dialog_add_product_title">Don\'t buy</string>
     <string name="dialog_add_product_name_hint">Product name</string>
-    <string name="dialog_add_product_cash_hint">Cash ($)</string>
+    <string name="dialog_add_product_cash_hint">Cost</string>
     <string name="dialog_add_product_add">Add</string>
     <string name="dialog_add_product_cancel">Cancel</string>
 

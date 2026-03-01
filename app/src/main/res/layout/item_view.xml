@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toStartOf="@+id/itemCount"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/itemCount"
@@ -36,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="8dp"
             android:textSize="16sp"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView

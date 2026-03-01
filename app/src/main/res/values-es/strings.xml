@@ -3,7 +3,7 @@
     <string name="action_settings">Ajustes</string>
 
     <!-- Etiquetas de Fragmentos -->
-    <string name="first_fragment_label">Ahorros por no comprar</string>
+    <string name="first_fragment_label">Ahorro por NO comprar</string>
     <string name="second_fragment_label">Segundo Fragmento</string>
 
     <!-- Panel de control -->
@@ -14,9 +14,9 @@
     <string name="item_count_format">x%d</string>
 
     <!-- Diálogo Agregar Producto -->
-    <string name="dialog_add_product_title">Producto</string>
+    <string name="dialog_add_product_title">No comprar</string>
     <string name="dialog_add_product_name_hint">Nombre del producto</string>
-    <string name="dialog_add_product_cash_hint">Dinero ($)</string>
+    <string name="dialog_add_product_cash_hint">Costo</string>
     <string name="dialog_add_product_add">Agregar</string>
     <string name="dialog_add_product_cancel">Cancelar</string>
 
