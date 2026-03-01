@@ -8,7 +8,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Product name">
+        android:hint="@string/dialog_add_product_name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Cash ($)">
+        android:hint="@string/dialog_add_product_cash_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAmount"

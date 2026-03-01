@@ -1,9 +1,22 @@
 <resources>
     <string name="app_name">Ahorro en gastos frustrados</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
+
+    <!-- Fragments Labels -->
     <string name="first_fragment_label">Savings from not buying</string>
     <string name="second_fragment_label">Second Fragment</string>
+
+    <!-- Dashboard -->
+    <string name="total_savings">Total Savings</string>
+    <string name="savings_format">+$%.2f</string>
+
+    <!-- Add Item Dialog -->
+    <string name="dialog_add_product_title">Product</string>
+    <string name="dialog_add_product_name_hint">Product name</string>
+    <string name="dialog_add_product_cash_hint">Cash ($)</string>
+    <string name="dialog_add_product_add">Add</string>
+    <string name="dialog_add_product_cancel">Cancel</string>
+
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 

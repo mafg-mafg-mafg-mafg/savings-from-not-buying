@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         val dialogBinding = DialogAddItemBinding.inflate(layoutInflater)
         
         MaterialAlertDialogBuilder(this)
-            .setTitle("Product")
+            .setTitle(R.string.dialog_add_product_title)
             .setView(dialogBinding.root)
-            .setPositiveButton("Agregar") { _, _ ->
+            .setPositiveButton(R.string.dialog_add_product_add) { _, _ ->
                 val name = dialogBinding.etName.text.toString()
                 val amountStr = dialogBinding.etAmount.text.toString()
                 val amount = amountStr.toDoubleOrNull() ?: 0.0
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(R.string.dialog_add_product_cancel, null)
             .show()
     }
 
