@@ -10,6 +10,9 @@
     <string name="total_savings">Total Savings</string>
     <string name="savings_format">+$%.2f</string>
 
+    <!-- Item View -->
+    <string name="item_count_format">x%d</string>
+
     <!-- Add Item Dialog -->
     <string name="dialog_add_product_title">Product</string>
     <string name="dialog_add_product_name_hint">Product name</string>

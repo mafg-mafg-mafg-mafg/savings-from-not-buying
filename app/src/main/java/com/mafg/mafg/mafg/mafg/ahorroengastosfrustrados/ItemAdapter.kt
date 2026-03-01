@@ -14,6 +14,7 @@ class ItemAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemName)
+        val countView: TextView = view.findViewById(R.id.itemCount)
         val amountView: TextView = view.findViewById(R.id.itemAmount)
     }
 
@@ -25,8 +26,11 @@ class ItemAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        val context = holder.itemView.context
+        
         holder.textView.text = item.name
-        holder.amountView.text = String.format(Locale.getDefault(), "+$%.2f", item.amount)
+        holder.countView.text = context.getString(R.string.item_count_format, item.count)
+        holder.amountView.text = String.format(Locale.getDefault(), context.getString(R.string.savings_format), item.amount)
         
         holder.itemView.setOnClickListener {
             onItemClick(item)
