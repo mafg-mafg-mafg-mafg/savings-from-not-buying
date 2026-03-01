@@ -1,7 +1,7 @@
 package com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados
 
 import android.os.Bundle
-import android.widget.EditText
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.ActivityMainBinding
+import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.DialogAddItemBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,18 +39,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAddItemDialog() {
-        val editText = EditText(this)
+        val dialogBinding = DialogAddItemBinding.inflate(layoutInflater)
+        
         AlertDialog.Builder(this)
             .setTitle("Nuevo Item")
-            .setMessage("Ingresa el nombre del item:")
-            .setView(editText)
+            .setView(dialogBinding.root)
             .setPositiveButton("Agregar") { _, _ ->
-                val text = editText.text.toString()
-                if (text.isNotBlank()) {
+                val name = dialogBinding.etName.text.toString()
+                val amountStr = dialogBinding.etAmount.text.toString()
+                val amount = amountStr.toDoubleOrNull() ?: 0.0
+                
+                if (name.isNotBlank()) {
                     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
                     val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
                     if (currentFragment is FirstFragment) {
-                        currentFragment.addItem(text)
+                        currentFragment.addItem(name, amount)
                     }
                 }
             }

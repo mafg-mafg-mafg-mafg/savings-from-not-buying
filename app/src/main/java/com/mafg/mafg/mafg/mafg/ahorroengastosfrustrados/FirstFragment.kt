@@ -75,12 +75,9 @@ class FirstFragment : Fragment() {
         binding.totalSavingsText.text = String.format(Locale.getDefault(), "+$%.2f", total)
     }
 
-    fun addItem(name: String) {
-        // Por ahora asignamos un valor aleatorio o fijo para demostrar el ahorro
-        // En el futuro podrías pedir este valor en el diálogo
-        val randomAmount = (10..100).random().toDouble()
+    fun addItem(name: String, amount: Double) {
         viewLifecycleOwner.lifecycleScope.launch {
-            val newItem = Item(name = name, amount = randomAmount)
+            val newItem = Item(name = name, amount = amount)
             db.itemDao().insert(newItem)
             loadItems()
         }
