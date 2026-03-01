@@ -2,7 +2,9 @@
 
 **Do not buy this product** is a personal finance application designed to transform deprivation into motivation. Its primary goal is to help users visualize and quantify the money they save every time they consciously choose **not to make** an impulsive or unnecessary purchase.
 
-![App Screenshot](app_screenshot.png)
+<p align="center">
+  <img src="app_screenshot.png" alt="App Screenshot" width="300">
+</p>
 
 ## Key Features
 
