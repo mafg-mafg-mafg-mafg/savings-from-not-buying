@@ -2,6 +2,7 @@ package com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Color
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
@@ -19,7 +20,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.FragmentFirstBinding
 import kotlinx.coroutines.launch
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class FirstFragment : Fragment() {
 
@@ -57,7 +62,21 @@ class FirstFragment : Fragment() {
             loadItems()
             triggerHapticFeedback()
             playCashRegisterSound()
+            triggerCelebration()
         }
+    }
+
+    private fun triggerCelebration() {
+        val party = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 360,
+            colors = listOf(0x8BC34A, 0x4FC3F7, 0xFFEB3B, 0xFF5252),
+            position = Position.Relative(0.5, 0.3),
+            emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100)
+        )
+        binding.konfettiView.start(party)
     }
 
     private fun setupSwipeToDelete() {

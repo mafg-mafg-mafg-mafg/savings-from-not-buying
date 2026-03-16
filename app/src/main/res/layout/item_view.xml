@@ -37,7 +37,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/light_blue"
             android:textStyle="bold" />
 
         <TextView
@@ -48,7 +48,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textSize="16sp"
-            android:textColor="@color/light_green"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
