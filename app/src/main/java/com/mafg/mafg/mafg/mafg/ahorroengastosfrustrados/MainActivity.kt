@@ -8,10 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.ActivityMainBinding
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.DialogAddItemBinding
@@ -25,7 +22,6 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     private val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
@@ -44,12 +40,20 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        val navController = navHostFragment.navController
-        
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val adapter = ScreenSlidePagerAdapter(this)
+        binding.contentMain.viewPager.adapter = adapter
+
+        // Change title based on current page
+        binding.contentMain.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                supportActionBar?.title = when (position) {
+                    0 -> getString(R.string.third_fragment_label)
+                    1 -> getString(R.string.first_fragment_label)
+                    else -> getString(R.string.second_fragment_label)
+                }
+            }
+        })
 
         binding.fab.setOnClickListener {
             showAddItemDialog()
@@ -68,11 +72,10 @@ class MainActivity : AppCompatActivity() {
                 val amount = amountStr.toDoubleOrNull() ?: 0.0
                 
                 if (name.isNotBlank()) {
-                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
-                    val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-                    if (currentFragment is FirstFragment) {
-                        currentFragment.addItem(name, amount)
-                    }
+                    val currentFragment = supportFragmentManager.fragments
+                        .filterIsInstance<FirstFragment>()
+                        .firstOrNull()
+                    currentFragment?.addItem(name, amount)
                 }
             }
             .setNegativeButton(R.string.dialog_add_product_cancel, null)
@@ -163,12 +166,10 @@ class MainActivity : AppCompatActivity() {
                         db.itemDao().insertAll(items)
                     }
                     
-                    // Refresh fragment UI
-                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
-                    val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-                    if (currentFragment is FirstFragment) {
-                        currentFragment.loadItems()
-                    }
+                    val currentFragment = supportFragmentManager.fragments
+                        .filterIsInstance<FirstFragment>()
+                        .firstOrNull()
+                    currentFragment?.loadItems()
                     
                     Toast.makeText(this@MainActivity, "Import successful!", Toast.LENGTH_SHORT).show()
                 }
@@ -176,13 +177,5 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Import failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        val navController = navHostFragment.navController
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 }

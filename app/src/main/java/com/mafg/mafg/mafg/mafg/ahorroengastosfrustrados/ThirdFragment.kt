@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.lifecycleScope
-import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.FragmentSecondBinding
+import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.FragmentThirdBinding
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class SecondFragment : Fragment() {
+class ThirdFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentThirdBinding? = null
     private val binding get() = _binding!!
     
     private val db by lazy { AppDatabase.getDatabase(requireContext()) }
@@ -24,43 +24,43 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentThirdBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadExpenses()
+        loadIncomes()
     }
 
     override fun onResume() {
         super.onResume()
-        loadExpenses()
+        loadIncomes()
     }
 
-    fun loadExpenses() {
+    fun loadIncomes() {
         if (_binding == null) return
         viewLifecycleOwner.lifecycleScope.launch {
             val items = db.itemDao().getAll()
-            updateTotalExpenses(items)
+            updateTotalIncomes(items)
         }
     }
 
-    private fun updateTotalExpenses(items: List<Item>) {
-        // En esta app, los "Gastos" se calculan igual que los ahorros pero se muestran como gasto total acumulado
+    private fun updateTotalIncomes(items: List<Item>) {
+        // En esta app, los "Ingresos" se calculan igual que los ahorros pero se muestran en la pantalla azul
         val newTotal = items.sumOf { it.amount * it.count }
-        animateExpenses(newTotal)
+        animateIncomes(newTotal)
     }
 
-    private fun animateExpenses(newTotal: Double) {
+    private fun animateIncomes(newTotal: Double) {
         if (newTotal > lastTotal) {
-            binding.totalExpensesText.animate()
+            binding.totalIncomesText.animate()
                 .scaleX(1.2f)
                 .scaleY(1.2f)
                 .setDuration(200)
                 .setInterpolator(OvershootInterpolator())
                 .withEndAction {
-                    binding.totalExpensesText.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                    binding.totalIncomesText.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
                 }.start()
         }
 
@@ -68,7 +68,7 @@ class SecondFragment : Fragment() {
         animator.duration = 1000
         animator.addUpdateListener { animation ->
             val animatedValue = animation.animatedValue as Float
-            binding.totalExpensesText.text = String.format(Locale.getDefault(), "-$%.2f", animatedValue)
+            binding.totalIncomesText.text = String.format(Locale.getDefault(), "+$%.2f", animatedValue)
         }
         animator.start()
         lastTotal = newTotal

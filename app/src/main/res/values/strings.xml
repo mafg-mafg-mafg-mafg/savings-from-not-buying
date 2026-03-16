@@ -5,11 +5,16 @@
 
     <!-- Fragments Labels -->
     <string name="first_fragment_label">Do not buy this product</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="second_fragment_label">Expenses</string>
+    <string name="third_fragment_label">Incomes</string>
 
     <!-- Dashboard -->
     <string name="total_savings">Total Savings</string>
     <string name="savings_format">+$%.2f</string>
+    <string name="total_expenses_label">Total Expenses</string>
+    <string name="expenses_format">-$%.2f</string>
+    <string name="total_incomes_label">Total Incomes</string>
+    <string name="incomes_format">+$%.2f</string>
 
     <!-- Item View -->
     <string name="item_count_format">x%d</string>

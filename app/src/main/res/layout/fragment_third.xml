@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".SecondFragment">
+    tools:context=".ThirdFragment">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/expensesCard"
+        android:id="@+id/incomesCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardBackgroundColor="@color/light_red"
+        app:cardBackgroundColor="@color/light_green"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,18 +25,18 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/expensesLabel"
+                android:id="@+id/incomesLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/total_expenses_label"
+                android:text="@string/total_incomes_label"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/totalExpensesText"
+                android:id="@+id/totalIncomesText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-$0.00"
+                android:text="+$0.00"
                 android:textColor="@color/white"
                 android:textSize="32sp"
                 android:textStyle="bold" />

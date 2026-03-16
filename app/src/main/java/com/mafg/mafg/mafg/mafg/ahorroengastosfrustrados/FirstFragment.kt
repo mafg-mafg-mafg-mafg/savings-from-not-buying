@@ -85,6 +85,7 @@ class FirstFragment : Fragment() {
     }
 
     fun loadItems() {
+        if (_binding == null) return
         viewLifecycleOwner.lifecycleScope.launch {
             val items = db.itemDao().getAll()
             adapter.updateItems(items)

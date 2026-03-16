@@ -5,11 +5,16 @@
 
     <!-- Etiquetas de Fragmentos -->
     <string name="first_fragment_label">No compres este producto</string>
-    <string name="second_fragment_label">Segundo Fragmento</string>
+    <string name="second_fragment_label">Gastos</string>
+    <string name="third_fragment_label">Ingresos</string>
 
     <!-- Panel de control -->
     <string name="total_savings">Ahorro Total</string>
     <string name="savings_format">+$%.2f</string>
+    <string name="total_expenses_label">Gastos Totales</string>
+    <string name="expenses_format">-$%.2f</string>
+    <string name="total_incomes_label">Ingresos Totales</string>
+    <string name="incomes_format">+$%.2f</string>
 
     <!-- Vista de Item -->
     <string name="item_count_format">x%d</string>
