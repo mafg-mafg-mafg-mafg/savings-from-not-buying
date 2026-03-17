@@ -12,6 +12,9 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE type = :type")
     suspend fun getByType(type: String): List<Item>
 
+    @Query("SELECT * FROM items WHERE type = :type AND timestamp >= :startOfDay AND timestamp <= :endOfDay")
+    suspend fun getByTypeAndDate(type: String, startOfDay: Long, endOfDay: Long): List<Item>
+
     @Query("SELECT * FROM items")
     suspend fun getAll(): List<Item>
 

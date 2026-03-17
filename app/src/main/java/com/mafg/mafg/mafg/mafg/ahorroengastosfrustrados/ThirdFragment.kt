@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -43,7 +44,6 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // No click logic for Incomes as requested
         adapter = ItemAdapter(mutableListOf()) { _ -> }
         binding.recyclerView.adapter = adapter
 
@@ -58,10 +58,34 @@ class ThirdFragment : Fragment() {
     fun loadItems() {
         if (_binding == null) return
         viewLifecycleOwner.lifecycleScope.launch {
-            val items = db.itemDao().getByType("INCOME")
-            adapter.updateItems(items)
-            updateTotalIncomes(items)
+            // 1. Get ALL incomes for the total sum dashboard
+            val allIncomes = db.itemDao().getByType("INCOME")
+            updateTotalIncomes(allIncomes)
+
+            // 2. Get ONLY today's incomes for the list
+            val startOfDay = getStartOfDay()
+            val endOfDay = getEndOfDay()
+            val todaysIncomes = db.itemDao().getByTypeAndDate("INCOME", startOfDay, endOfDay)
+            adapter.updateItems(todaysIncomes)
         }
+    }
+
+    private fun getStartOfDay(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
+
+    private fun getEndOfDay(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        return calendar.timeInMillis
     }
 
     private fun updateTotalIncomes(items: List<Item>) {
