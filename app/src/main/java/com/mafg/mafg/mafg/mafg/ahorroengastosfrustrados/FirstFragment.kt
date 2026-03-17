@@ -106,7 +106,8 @@ class FirstFragment : Fragment() {
     fun loadItems() {
         if (_binding == null) return
         viewLifecycleOwner.lifecycleScope.launch {
-            val items = db.itemDao().getAll()
+            // Filter by SAVING type to ensure counters are visible and data is correct
+            val items = db.itemDao().getByType("SAVING")
             adapter.updateItems(items)
             updateTotalSavings(items)
         }
@@ -165,7 +166,7 @@ class FirstFragment : Fragment() {
 
     fun addItem(name: String, amount: Double) {
         viewLifecycleOwner.lifecycleScope.launch {
-            val newItem = Item(name = name, amount = amount, count = 1)
+            val newItem = Item(name = name, amount = amount, count = 1, type = "SAVING")
             db.itemDao().insert(newItem)
             loadItems()
         }

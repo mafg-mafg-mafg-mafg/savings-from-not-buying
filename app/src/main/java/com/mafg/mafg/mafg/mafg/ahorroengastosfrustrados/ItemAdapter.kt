@@ -29,7 +29,15 @@ class ItemAdapter(
         val context = holder.itemView.context
         
         holder.textView.text = item.name
-        holder.countView.text = context.getString(R.string.item_count_format, item.count)
+        
+        // Hide count indicator for INCOMES, show for SAVINGS
+        if (item.type == "INCOME") {
+            holder.countView.visibility = View.GONE
+        } else {
+            holder.countView.visibility = View.VISIBLE
+            holder.countView.text = context.getString(R.string.item_count_format, item.count)
+        }
+
         holder.amountView.text = String.format(Locale.getDefault(), context.getString(R.string.savings_format), item.amount)
         
         holder.itemView.setOnClickListener {

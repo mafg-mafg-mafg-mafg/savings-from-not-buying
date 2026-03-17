@@ -56,11 +56,16 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.fab.setOnClickListener {
-            showAddItemDialog()
+            val currentItem = binding.contentMain.viewPager.currentItem
+            if (currentItem == 0) {
+                showAddIncomeDialog()
+            } else if (currentItem == 1) {
+                showAddSavingDialog()
+            }
         }
     }
 
-    private fun showAddItemDialog() {
+    private fun showAddSavingDialog() {
         val dialogBinding = DialogAddItemBinding.inflate(layoutInflater)
         
         MaterialAlertDialogBuilder(this)
@@ -76,6 +81,31 @@ class MainActivity : AppCompatActivity() {
                         .filterIsInstance<FirstFragment>()
                         .firstOrNull()
                     currentFragment?.addItem(name, amount)
+                }
+            }
+            .setNegativeButton(R.string.dialog_add_product_cancel, null)
+            .show()
+    }
+
+    private fun showAddIncomeDialog() {
+        val dialogBinding = DialogAddItemBinding.inflate(layoutInflater)
+        // Set custom hints for Incomes
+        dialogBinding.tilName.hint = getString(R.string.dialog_add_income_name_hint)
+        dialogBinding.tilAmount.hint = getString(R.string.dialog_add_income_cash_hint)
+        
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_add_income_title)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.dialog_add_product_add) { _, _ ->
+                val origin = dialogBinding.etName.text.toString()
+                val incomeStr = dialogBinding.etAmount.text.toString()
+                val amount = incomeStr.toDoubleOrNull() ?: 0.0
+                
+                if (origin.isNotBlank()) {
+                    val currentFragment = supportFragmentManager.fragments
+                        .filterIsInstance<ThirdFragment>()
+                        .firstOrNull()
+                    currentFragment?.addItem(origin, amount)
                 }
             }
             .setNegativeButton(R.string.dialog_add_product_cancel, null)
@@ -120,10 +150,10 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO) {
                     contentResolver.openOutputStream(uri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
-                            writer.write("ID,Name,Amount,Count,Subtotal\n")
+                            writer.write("ID,Name,Amount,Count,Subtotal,Type\n")
                             items.forEach { item ->
                                 val subtotal = item.amount * item.count
-                                writer.write("${item.id},${item.name},${item.amount},${item.count},${String.format(Locale.US, "%.2f", subtotal)}\n")
+                                writer.write("${item.id},${item.name},${item.amount},${item.count},${String.format(Locale.US, "%.2f", subtotal)},${item.type}\n")
                             }
                             writer.write("\n,,,,Total: ${String.format(Locale.US, "%.2f", totalSavings)}\n")
                         }
@@ -152,7 +182,8 @@ class MainActivity : AppCompatActivity() {
                                     val name = parts[1]
                                     val amount = parts[2].toDoubleOrNull() ?: 0.0
                                     val count = parts[3].toIntOrNull() ?: 1
-                                    items.add(Item(name = name, amount = amount, count = count))
+                                    val type = if (parts.size > 5) parts[5] else "SAVING"
+                                    items.add(Item(name = name, amount = amount, count = count, type = type))
                                 }
                                 line = reader.readLine()
                             }
@@ -166,10 +197,11 @@ class MainActivity : AppCompatActivity() {
                         db.itemDao().insertAll(items)
                     }
                     
-                    val currentFragment = supportFragmentManager.fragments
-                        .filterIsInstance<FirstFragment>()
-                        .firstOrNull()
-                    currentFragment?.loadItems()
+                    supportFragmentManager.fragments.forEach { fragment ->
+                        if (fragment is FirstFragment) fragment.loadItems()
+                        if (fragment is ThirdFragment) fragment.loadItems()
+                        if (fragment is SecondFragment) fragment.loadExpenses()
+                    }
                     
                     Toast.makeText(this@MainActivity, "Import successful!", Toast.LENGTH_SHORT).show()
                 }

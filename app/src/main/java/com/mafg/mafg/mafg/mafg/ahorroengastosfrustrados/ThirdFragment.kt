@@ -1,7 +1,14 @@
 package com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados
 
 import android.animation.ValueAnimator
+import android.content.Context
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +17,18 @@ import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.lifecycleScope
 import com.mafg.mafg.mafg.mafg.ahorroengastosfrustrados.databinding.FragmentThirdBinding
 import kotlinx.coroutines.launch
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class ThirdFragment : Fragment() {
 
     private var _binding: FragmentThirdBinding? = null
     private val binding get() = _binding!!
     
+    private lateinit var adapter: ItemAdapter
     private val db by lazy { AppDatabase.getDatabase(requireContext()) }
     private var lastTotal = 0.0
 
@@ -30,24 +42,29 @@ class ThirdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadIncomes()
+        
+        // No click logic for Incomes as requested
+        adapter = ItemAdapter(mutableListOf()) { _ -> }
+        binding.recyclerView.adapter = adapter
+
+        loadItems()
     }
 
     override fun onResume() {
         super.onResume()
-        loadIncomes()
+        loadItems()
     }
 
-    fun loadIncomes() {
+    fun loadItems() {
         if (_binding == null) return
         viewLifecycleOwner.lifecycleScope.launch {
-            val items = db.itemDao().getAll()
+            val items = db.itemDao().getByType("INCOME")
+            adapter.updateItems(items)
             updateTotalIncomes(items)
         }
     }
 
     private fun updateTotalIncomes(items: List<Item>) {
-        // En esta app, los "Ingresos" se calculan igual que los ahorros pero se muestran en la pantalla azul
         val newTotal = items.sumOf { it.amount * it.count }
         animateIncomes(newTotal)
     }
@@ -72,6 +89,54 @@ class ThirdFragment : Fragment() {
         }
         animator.start()
         lastTotal = newTotal
+    }
+
+    fun addItem(name: String, amount: Double) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val newItem = Item(name = name, amount = amount, count = 1, type = "INCOME")
+            db.itemDao().insert(newItem)
+            loadItems()
+            triggerHapticFeedback()
+            playCashRegisterSound()
+            triggerCelebration()
+        }
+    }
+
+    private fun triggerCelebration() {
+        val party = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 360,
+            colors = listOf(0x8BC34A, 0x4FC3F7, 0xFFEB3B, 0xFF5252),
+            position = Position.Relative(0.5, 0.3),
+            emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100)
+        )
+        binding.konfettiView.start(party)
+    }
+
+    private fun triggerHapticFeedback() {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = requireContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(50)
+        }
+    }
+
+    private fun playCashRegisterSound() {
+        try {
+            val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
+            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroyView() {

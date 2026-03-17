@@ -19,12 +19,17 @@
     <!-- Vista de Item -->
     <string name="item_count_format">x%d</string>
 
-    <!-- Diálogo Agregar Producto -->
+    <!-- Diálogo Agregar Producto (Ahorros) -->
     <string name="dialog_add_product_title">No comprar</string>
     <string name="dialog_add_product_name_hint">Nombre del producto</string>
     <string name="dialog_add_product_cash_hint">Costo</string>
     <string name="dialog_add_product_add">Agregar</string>
     <string name="dialog_add_product_cancel">Cancelar</string>
+
+    <!-- Diálogo Agregar Ingreso -->
+    <string name="dialog_add_income_title">Ingreso</string>
+    <string name="dialog_add_income_name_hint">Origen del ingreso</string>
+    <string name="dialog_add_income_cash_hint">Ingreso</string>
 
     <string name="next">Siguiente</string>
     <string name="previous">Anterior</string>

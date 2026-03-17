@@ -8,5 +8,6 @@ data class Item(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val amount: Double = 0.0,
-    val count: Int = 1
+    val count: Int = 1,
+    val type: String = "SAVING" // SAVING or INCOME
 )
